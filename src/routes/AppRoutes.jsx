@@ -1,36 +1,46 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from '../components/common/ProtectedRoute';
-
-// Public Pages
-import HomePage from '../pages/public/HomePage';
-import NgoDirectoryPage from '../pages/public/NgoDirectoryPage';
-import NgoPublicProfilePage from '../pages/public/NgoPublicProfilePage';
-import CampaignDirectoryPage from '../pages/public/CampaignDirectoryPage';
-import NeedRequestDetailsPage from '../pages/public/NeedRequestDetailsPage';
-import CampaignTrackingPage from '../pages/public/CampaignTrackingPage';
-import LoginPage from '../pages/public/LoginPage';
-import RegisterPage from '../pages/public/RegisterPage';
-import ForgotPasswordPage from '../pages/public/ForgotPasswordPage';
-import VerificationConfirmationPage from '../pages/public/VerificationConfirmationPage';
-import CsrLandingPage from '../pages/public/CsrLandingPage';
-
-// Donor Pages
-import DonorDashboardPage from '../pages/donor/DonorDashboardPage';
-import DonorProfilePage from '../pages/donor/DonorProfilePage';
-import MyTicketsPage from '../pages/donor/MyTicketsPage';
-import CreateTicketPage from '../pages/donor/CreateTicketPage';
-import TicketDetailPage from '../pages/donor/TicketDetailPage';
-
-// Hidden Admin Login Page
-import AdminLoginPage from '../pages/admin/AdminLoginPage';
-
 import PageLoadingFallback from '../components/common/PageLoadingFallback';
 
-// Eager Public Onboarding Page
+// Critical public pages — eagerly loaded (above-the-fold / first paint)
+import LoginPage from '../pages/public/LoginPage';
+import RegisterPage from '../pages/public/RegisterPage';
+import HomePage from '../pages/public/HomePage';
+
+// Admin login — eager (direct entry point without app shell)
+import AdminLoginPage from '../pages/admin/AdminLoginPage';
+
+// NGO public registration — eager (public onboarding entry point)
 import NgoRegistrationPage from '../pages/ngo/NgoRegistrationPage';
 
-// Lazy Loaded NGO Pages (Step 14)
+// ---------------------------------------------------------------------------
+// All remaining pages are lazy-loaded. They are only fetched when the user
+// navigates to their route, keeping the initial JS bundle minimal.
+// ---------------------------------------------------------------------------
+
+// Public pages
+const NgoDirectoryPage = React.lazy(() => import('../pages/public/NgoDirectoryPage'));
+const NgoPublicProfilePage = React.lazy(() => import('../pages/public/NgoPublicProfilePage'));
+const CampaignDirectoryPage = React.lazy(() => import('../pages/public/CampaignDirectoryPage'));
+const NeedRequestDetailsPage = React.lazy(() => import('../pages/public/NeedRequestDetailsPage'));
+const CampaignTrackingPage = React.lazy(() => import('../pages/public/CampaignTrackingPage'));
+const ForgotPasswordPage = React.lazy(() => import('../pages/public/ForgotPasswordPage'));
+const VerificationConfirmationPage = React.lazy(() => import('../pages/public/VerificationConfirmationPage'));
+const CsrLandingPage = React.lazy(() => import('../pages/public/CsrLandingPage'));
+const ResetPasswordConfirmPage = React.lazy(() => import('../pages/public/ResetPasswordConfirmPage'));
+const TermsPage = React.lazy(() => import('../pages/public/TermsPage'));
+const PrivacyPage = React.lazy(() => import('../pages/public/PrivacyPage'));
+const NotFoundPage = React.lazy(() => import('../pages/public/NotFoundPage'));
+
+// Donor pages
+const DonorDashboardPage = React.lazy(() => import('../pages/donor/DonorDashboardPage'));
+const DonorProfilePage = React.lazy(() => import('../pages/donor/DonorProfilePage'));
+const MyTicketsPage = React.lazy(() => import('../pages/donor/MyTicketsPage'));
+const CreateTicketPage = React.lazy(() => import('../pages/donor/CreateTicketPage'));
+const TicketDetailPage = React.lazy(() => import('../pages/donor/TicketDetailPage'));
+
+// NGO pages
 const NgoRegistrationFlowPage = React.lazy(() => import('../pages/ngo/NgoRegistrationFlowPage'));
 const NgoDashboardPage = React.lazy(() => import('../pages/ngo/NgoDashboardPage'));
 const NgoNeedManagementPage = React.lazy(() => import('../pages/ngo/NgoNeedManagementPage'));
@@ -41,13 +51,13 @@ const NgoTicketDetailPage = React.lazy(() => import('../pages/ngo/NgoTicketDetai
 const NgoAnalyticsPage = React.lazy(() => import('../pages/ngo/NgoAnalyticsPage'));
 const NgoProfilePage = React.lazy(() => import('../pages/ngo/NgoProfilePage'));
 
-// Lazy Loaded Village Projects Pages (Phase 7.2)
+// NGO project pages
 const MyProjectsPage = React.lazy(() => import('../pages/ngo/MyProjectsPage'));
 const CreateProjectPage = React.lazy(() => import('../pages/ngo/CreateProjectPage'));
 const ProjectDetailPage = React.lazy(() => import('../pages/ngo/ProjectDetailPage'));
 const EditProjectPage = React.lazy(() => import('../pages/ngo/EditProjectPage'));
 
-// Lazy Loaded Admin Pages (Step 14)
+// Admin pages
 const AdminDashboardPage = React.lazy(() => import('../pages/admin/AdminDashboardPage'));
 const AdminNgoVerificationPage = React.lazy(() => import('../pages/admin/AdminNgoVerificationPage'));
 const AdminProjectVerificationPage = React.lazy(() => import('../pages/admin/AdminProjectVerificationPage'));
@@ -57,7 +67,7 @@ const AdminComplaintsPage = React.lazy(() => import('../pages/admin/AdminComplai
 const AdminTicketDetailPage = React.lazy(() => import('../pages/admin/AdminTicketDetailPage'));
 const AdminAnalyticsDashboardPage = React.lazy(() => import('../pages/admin/AdminAnalyticsDashboardPage'));
 
-// Lazy Loaded Company CSR Pages (Step 14)
+// Company CSR pages
 const CompanyDashboardPage = React.lazy(() => import('../pages/company/CompanyDashboardPage'));
 const CompanyProfilePage = React.lazy(() => import('../pages/company/CompanyProfilePage'));
 const CompanyPreferencesPage = React.lazy(() => import('../pages/company/CompanyPreferencesPage'));
@@ -71,23 +81,17 @@ const CreateCompanyTicketPage = React.lazy(() => import('../pages/company/Create
 const CompanyTicketDetailPage = React.lazy(() => import('../pages/company/CompanyTicketDetailPage'));
 const CompanyAnalyticsPage = React.lazy(() => import('../pages/company/CompanyAnalyticsPage'));
 
-// Lazy Loaded NGO CSR Pages (Step 14)
+// NGO CSR pages
 const NgoCsrDashboardPage = React.lazy(() => import('../pages/ngo/csr/NgoCsrDashboardPage'));
 const NgoCsrRequirementsPage = React.lazy(() => import('../pages/ngo/csr/NgoCsrRequirementsPage'));
 const NgoCsrRequirementBuilderPage = React.lazy(() => import('../pages/ngo/csr/NgoCsrRequirementBuilderPage'));
 const NgoCsrRequestsPage = React.lazy(() => import('../pages/ngo/csr/NgoCsrRequestsPage'));
 const NgoCsrPartnershipsPage = React.lazy(() => import('../pages/ngo/csr/NgoCsrPartnershipsPage'));
 
-// Lazy Loaded Admin CSR Pages (Step 14)
+// Admin CSR pages
 const AdminCsrCompaniesPage = React.lazy(() => import('../pages/admin/csr/AdminCsrCompaniesPage'));
 const AdminCsrRequirementsPage = React.lazy(() => import('../pages/admin/csr/AdminCsrRequirementsPage'));
 const AdminCsrOversightPage = React.lazy(() => import('../pages/admin/csr/AdminCsrOversightPage'));
-
-import ResetPasswordConfirmPage from '../pages/public/ResetPasswordConfirmPage';
-import TermsPage from '../pages/public/TermsPage';
-import PrivacyPage from '../pages/public/PrivacyPage';
-
-import NotFoundPage from '../pages/public/NotFoundPage';
 
 export default function AppRoutes() {
   return (

@@ -20,6 +20,27 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    // Phase 7 performance: manual chunk splitting to reduce initial bundle size
+    rollupOptions: {
+      output: {
+        // Rolldown (Vite 8) requires manualChunks to be a function
+        manualChunks(id) {
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+            return 'vendor-react';
+          }
+          if (id.includes('node_modules/react-router') || id.includes('node_modules/@remix-run/')) {
+            return 'vendor-router';
+          }
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-') || id.includes('node_modules/victory-')) {
+            return 'vendor-charts';
+          }
+        },
+      },
+    },
+    // Raise the warning threshold slightly — intentional vendor chunks may be large
+    chunkSizeWarningLimit: 600,
+  },
   test: {
     globals: true,
     environment: 'jsdom',

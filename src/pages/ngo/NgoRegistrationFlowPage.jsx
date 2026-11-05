@@ -421,12 +421,16 @@ export default function NgoRegistrationFlowPage() {
         has_10_23c: Boolean(legal.has_10_23c),
         ten_23c_subclause: legal.ten_23c_subclause?.trim() || '',
         ten_23c_order_number: legal.ten_23c_order_number?.trim() || '',
+        ten_23c_validity: legal.ten_23c_validity || null,
         has_12a: Boolean(legal.has_12a),
         twelve_a_number: legal.twelve_a_number?.trim() || '',
+        twelve_a_validity: legal.twelve_a_validity || null,
         has_80g: Boolean(legal.has_80g),
         eighty_g_number: legal.eighty_g_number?.trim() || '',
+        eighty_g_validity: legal.eighty_g_validity || null,
         has_fcra: Boolean(legal.has_fcra),
         fcra_number: legal.fcra_number?.trim() || '',
+        fcra_validity: legal.fcra_validity || null,
         has_csr_1: Boolean(legal.has_csr_1),
         csr_registration_number: legal.csr_registration_number ? legal.csr_registration_number.toUpperCase().trim() : '',
         csr_registration_date: legal.csr_registration_date || null,
@@ -2042,12 +2046,32 @@ export default function NgoRegistrationFlowPage() {
                 </div>
 
                 <div className="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/40 space-y-1">
-                  <span className="font-bold text-primary uppercase tracking-wider block">3. Legal</span>
-                  <p className="font-semibold text-on-surface">PAN: {legal.pan_number || 'Missing'}</p>
-                  <p className="text-on-surface-variant">Darpan: {legal.darpan_id || 'N/A'}</p>
-                  <p className="text-on-surface-variant">
-                    CSR-1: {legal.has_csr_1 ? (legal.csr_registration_number || 'Registered') : 'Not Registered'}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-primary uppercase tracking-wider block">3. Legal</span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${hasLegal ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}`}>
+                      {hasLegal ? 'Saved' : 'Not Saved'}
+                    </span>
+                  </div>
+                  {hasLegal ? (
+                    <>
+                      <p className="font-semibold text-on-surface">PAN: {legal.pan_number || 'Missing'}</p>
+                      <p className="text-on-surface-variant">Darpan: {legal.darpan_id || 'N/A'}</p>
+                      <p className="text-on-surface-variant">
+                        CSR-1: {legal.has_csr_1 ? (legal.csr_registration_number || 'Registered') : 'Not Registered'}
+                      </p>
+                    </>
+                  ) : (
+                    <div className="space-y-1 pt-1">
+                      <p className="text-red-600 font-semibold text-xs">Legal details not saved on server.</p>
+                      <button
+                        type="button"
+                        onClick={() => setStep(3)}
+                        className="text-primary font-bold hover:underline cursor-pointer text-xs"
+                      >
+                        Return to Step 3 to Save Legal Details →
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <div className="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/40 space-y-1">

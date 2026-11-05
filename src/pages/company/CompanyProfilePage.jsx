@@ -98,6 +98,22 @@ export default function CompanyProfilePage() {
         setIsNewProfile(true);
         setInitialProfile({ verification_status: 'DRAFT' });
         setSaveError('');
+
+        // Prefill contact details from authenticated user session if available
+        try {
+          const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+          if (storedUser) {
+            setFormData((prev) => ({
+              ...prev,
+              company_name: prev.company_name || storedUser.organization_name || '',
+              contact_person_name: prev.contact_person_name || storedUser.full_name || '',
+              contact_email: prev.contact_email || storedUser.email || '',
+              contact_phone: prev.contact_phone || storedUser.phone || '',
+            }));
+          }
+        } catch {
+          // ignore localStorage parsing errors
+        }
       } else {
         setSaveError(err.message || 'Failed to fetch corporate profile.');
       }
@@ -230,6 +246,12 @@ export default function CompanyProfilePage() {
   const handleDocumentUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (isNewProfile) {
+      setDocError('Please save your corporate profile details below before uploading statutory verification documents.');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
 
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
       setDocError('Only PDF documents are accepted for statutory verification.');
@@ -593,7 +615,12 @@ export default function CompanyProfilePage() {
                     className="hidden"
                     disabled={!isEditable || uploadingDoc}
                   />
-                  {isEditable ? (
+                  {isNewProfile ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl">
+                      <span className="material-symbols-outlined text-sm">info</span>
+                      Save profile details below first
+                    </span>
+                  ) : isEditable ? (
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}

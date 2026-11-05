@@ -219,6 +219,9 @@ export async function registerUser(userData) {
         password: userData.password,
         password_confirm: userData.password,
         role: userData.role || 'DONOR',
+        organization_name: userData.organizationName || userData.organization_name || '',
+        registration_number: userData.registrationNumber || userData.registration_number || '',
+        cin_number: userData.cinNumber || userData.cin_number || userData.registrationNumber || '',
       }),
     });
   } catch (err) {
